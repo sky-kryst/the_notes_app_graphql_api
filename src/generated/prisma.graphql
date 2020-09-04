@@ -1,0 +1,2521 @@
+# source: http://192.168.99.100:4466
+# timestamp: Wed Aug 19 2020 13:31:21 GMT+0530 (India Standard Time)
+
+type AggregateNote {
+  count: Int!
+}
+
+type AggregateRequest {
+  count: Int!
+}
+
+type AggregateUser {
+  count: Int!
+}
+
+type BatchPayload {
+  """The number of nodes that have been affected by the Batch operation."""
+  count: Long!
+}
+
+scalar DateTime
+
+"""Raw JSON value"""
+scalar Json
+
+"""
+The `Long` scalar type represents non-fractional signed whole numeric values.
+Long can represent values between -(2^63) and 2^63 - 1.
+"""
+scalar Long
+
+type Mutation {
+  createRequest(data: RequestCreateInput!): Request!
+  createNote(data: NoteCreateInput!): Note!
+  createUser(data: UserCreateInput!): User!
+  updateRequest(data: RequestUpdateInput!, where: RequestWhereUniqueInput!): Request
+  updateNote(data: NoteUpdateInput!, where: NoteWhereUniqueInput!): Note
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  deleteRequest(where: RequestWhereUniqueInput!): Request
+  deleteNote(where: NoteWhereUniqueInput!): Note
+  deleteUser(where: UserWhereUniqueInput!): User
+  upsertRequest(where: RequestWhereUniqueInput!, create: RequestCreateInput!, update: RequestUpdateInput!): Request!
+  upsertNote(where: NoteWhereUniqueInput!, create: NoteCreateInput!, update: NoteUpdateInput!): Note!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  updateManyRequests(data: RequestUpdateManyMutationInput!, where: RequestWhereInput): BatchPayload!
+  updateManyNotes(data: NoteUpdateManyMutationInput!, where: NoteWhereInput): BatchPayload!
+  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  deleteManyRequests(where: RequestWhereInput): BatchPayload!
+  deleteManyNotes(where: NoteWhereInput): BatchPayload!
+  deleteManyUsers(where: UserWhereInput): BatchPayload!
+  executeRaw(database: PrismaDatabase, query: String!): Json!
+}
+
+enum MutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+"""An object with an ID"""
+interface Node {
+  """The id of the object."""
+  id: ID!
+}
+
+type Note implements Node {
+  id: ID!
+  title: String
+  body: String!
+  published: Boolean!
+  likes(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  creator: User!
+  collaborator(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  consumer(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  requests(where: RequestWhereInput, orderBy: RequestOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Request!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""A connection to a list of items."""
+type NoteConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [NoteEdge]!
+  aggregate: AggregateNote!
+}
+
+input NoteCreateInput {
+  id: ID
+  title: String
+  body: String!
+  published: Boolean!
+  likes: UserCreateManyInput
+  creator: UserCreateOneWithoutCreatedPostsInput!
+  collaborator: UserCreateManyWithoutCollaboratedPostsInput
+  consumer: UserCreateManyWithoutConsumedPostsInput
+  requests: RequestCreateManyWithoutNoteInput
+}
+
+input NoteCreateManyWithoutCollaboratorInput {
+  create: [NoteCreateWithoutCollaboratorInput!]
+  connect: [NoteWhereUniqueInput!]
+}
+
+input NoteCreateManyWithoutConsumerInput {
+  create: [NoteCreateWithoutConsumerInput!]
+  connect: [NoteWhereUniqueInput!]
+}
+
+input NoteCreateManyWithoutCreatorInput {
+  create: [NoteCreateWithoutCreatorInput!]
+  connect: [NoteWhereUniqueInput!]
+}
+
+input NoteCreateOneWithoutRequestsInput {
+  create: NoteCreateWithoutRequestsInput
+  connect: NoteWhereUniqueInput
+}
+
+input NoteCreateWithoutCollaboratorInput {
+  id: ID
+  title: String
+  body: String!
+  published: Boolean!
+  likes: UserCreateManyInput
+  creator: UserCreateOneWithoutCreatedPostsInput!
+  consumer: UserCreateManyWithoutConsumedPostsInput
+  requests: RequestCreateManyWithoutNoteInput
+}
+
+input NoteCreateWithoutConsumerInput {
+  id: ID
+  title: String
+  body: String!
+  published: Boolean!
+  likes: UserCreateManyInput
+  creator: UserCreateOneWithoutCreatedPostsInput!
+  collaborator: UserCreateManyWithoutCollaboratedPostsInput
+  requests: RequestCreateManyWithoutNoteInput
+}
+
+input NoteCreateWithoutCreatorInput {
+  id: ID
+  title: String
+  body: String!
+  published: Boolean!
+  likes: UserCreateManyInput
+  collaborator: UserCreateManyWithoutCollaboratedPostsInput
+  consumer: UserCreateManyWithoutConsumedPostsInput
+  requests: RequestCreateManyWithoutNoteInput
+}
+
+input NoteCreateWithoutRequestsInput {
+  id: ID
+  title: String
+  body: String!
+  published: Boolean!
+  likes: UserCreateManyInput
+  creator: UserCreateOneWithoutCreatedPostsInput!
+  collaborator: UserCreateManyWithoutCollaboratedPostsInput
+  consumer: UserCreateManyWithoutConsumedPostsInput
+}
+
+"""An edge in a connection."""
+type NoteEdge {
+  """The item at the end of the edge."""
+  node: Note!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum NoteOrderByInput {
+  id_ASC
+  id_DESC
+  title_ASC
+  title_DESC
+  body_ASC
+  body_DESC
+  published_ASC
+  published_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type NotePreviousValues {
+  id: ID!
+  title: String
+  body: String!
+  published: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input NoteScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [NoteScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [NoteScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [NoteScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  title: String
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values that are contained in given list."""
+  title_in: [String!]
+
+  """All values that are not contained in given list."""
+  title_not_in: [String!]
+
+  """All values less than the given value."""
+  title_lt: String
+
+  """All values less than or equal the given value."""
+  title_lte: String
+
+  """All values greater than the given value."""
+  title_gt: String
+
+  """All values greater than or equal the given value."""
+  title_gte: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values not ending with the given string."""
+  title_not_ends_with: String
+  body: String
+
+  """All values that are not equal to given value."""
+  body_not: String
+
+  """All values that are contained in given list."""
+  body_in: [String!]
+
+  """All values that are not contained in given list."""
+  body_not_in: [String!]
+
+  """All values less than the given value."""
+  body_lt: String
+
+  """All values less than or equal the given value."""
+  body_lte: String
+
+  """All values greater than the given value."""
+  body_gt: String
+
+  """All values greater than or equal the given value."""
+  body_gte: String
+
+  """All values containing the given string."""
+  body_contains: String
+
+  """All values not containing the given string."""
+  body_not_contains: String
+
+  """All values starting with the given string."""
+  body_starts_with: String
+
+  """All values not starting with the given string."""
+  body_not_starts_with: String
+
+  """All values ending with the given string."""
+  body_ends_with: String
+
+  """All values not ending with the given string."""
+  body_not_ends_with: String
+  published: Boolean
+
+  """All values that are not equal to given value."""
+  published_not: Boolean
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+}
+
+type NoteSubscriptionPayload {
+  mutation: MutationType!
+  node: Note
+  updatedFields: [String!]
+  previousValues: NotePreviousValues
+}
+
+input NoteSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [NoteSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [NoteSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [NoteSubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: NoteWhereInput
+}
+
+input NoteUpdateInput {
+  title: String
+  body: String
+  published: Boolean
+  likes: UserUpdateManyInput
+  creator: UserUpdateOneRequiredWithoutCreatedPostsInput
+  collaborator: UserUpdateManyWithoutCollaboratedPostsInput
+  consumer: UserUpdateManyWithoutConsumedPostsInput
+  requests: RequestUpdateManyWithoutNoteInput
+}
+
+input NoteUpdateManyDataInput {
+  title: String
+  body: String
+  published: Boolean
+}
+
+input NoteUpdateManyMutationInput {
+  title: String
+  body: String
+  published: Boolean
+}
+
+input NoteUpdateManyWithoutCollaboratorInput {
+  create: [NoteCreateWithoutCollaboratorInput!]
+  connect: [NoteWhereUniqueInput!]
+  set: [NoteWhereUniqueInput!]
+  disconnect: [NoteWhereUniqueInput!]
+  delete: [NoteWhereUniqueInput!]
+  update: [NoteUpdateWithWhereUniqueWithoutCollaboratorInput!]
+  updateMany: [NoteUpdateManyWithWhereNestedInput!]
+  deleteMany: [NoteScalarWhereInput!]
+  upsert: [NoteUpsertWithWhereUniqueWithoutCollaboratorInput!]
+}
+
+input NoteUpdateManyWithoutConsumerInput {
+  create: [NoteCreateWithoutConsumerInput!]
+  connect: [NoteWhereUniqueInput!]
+  set: [NoteWhereUniqueInput!]
+  disconnect: [NoteWhereUniqueInput!]
+  delete: [NoteWhereUniqueInput!]
+  update: [NoteUpdateWithWhereUniqueWithoutConsumerInput!]
+  updateMany: [NoteUpdateManyWithWhereNestedInput!]
+  deleteMany: [NoteScalarWhereInput!]
+  upsert: [NoteUpsertWithWhereUniqueWithoutConsumerInput!]
+}
+
+input NoteUpdateManyWithoutCreatorInput {
+  create: [NoteCreateWithoutCreatorInput!]
+  connect: [NoteWhereUniqueInput!]
+  set: [NoteWhereUniqueInput!]
+  disconnect: [NoteWhereUniqueInput!]
+  delete: [NoteWhereUniqueInput!]
+  update: [NoteUpdateWithWhereUniqueWithoutCreatorInput!]
+  updateMany: [NoteUpdateManyWithWhereNestedInput!]
+  deleteMany: [NoteScalarWhereInput!]
+  upsert: [NoteUpsertWithWhereUniqueWithoutCreatorInput!]
+}
+
+input NoteUpdateManyWithWhereNestedInput {
+  where: NoteScalarWhereInput!
+  data: NoteUpdateManyDataInput!
+}
+
+input NoteUpdateOneRequiredWithoutRequestsInput {
+  create: NoteCreateWithoutRequestsInput
+  connect: NoteWhereUniqueInput
+  update: NoteUpdateWithoutRequestsDataInput
+  upsert: NoteUpsertWithoutRequestsInput
+}
+
+input NoteUpdateWithoutCollaboratorDataInput {
+  title: String
+  body: String
+  published: Boolean
+  likes: UserUpdateManyInput
+  creator: UserUpdateOneRequiredWithoutCreatedPostsInput
+  consumer: UserUpdateManyWithoutConsumedPostsInput
+  requests: RequestUpdateManyWithoutNoteInput
+}
+
+input NoteUpdateWithoutConsumerDataInput {
+  title: String
+  body: String
+  published: Boolean
+  likes: UserUpdateManyInput
+  creator: UserUpdateOneRequiredWithoutCreatedPostsInput
+  collaborator: UserUpdateManyWithoutCollaboratedPostsInput
+  requests: RequestUpdateManyWithoutNoteInput
+}
+
+input NoteUpdateWithoutCreatorDataInput {
+  title: String
+  body: String
+  published: Boolean
+  likes: UserUpdateManyInput
+  collaborator: UserUpdateManyWithoutCollaboratedPostsInput
+  consumer: UserUpdateManyWithoutConsumedPostsInput
+  requests: RequestUpdateManyWithoutNoteInput
+}
+
+input NoteUpdateWithoutRequestsDataInput {
+  title: String
+  body: String
+  published: Boolean
+  likes: UserUpdateManyInput
+  creator: UserUpdateOneRequiredWithoutCreatedPostsInput
+  collaborator: UserUpdateManyWithoutCollaboratedPostsInput
+  consumer: UserUpdateManyWithoutConsumedPostsInput
+}
+
+input NoteUpdateWithWhereUniqueWithoutCollaboratorInput {
+  where: NoteWhereUniqueInput!
+  data: NoteUpdateWithoutCollaboratorDataInput!
+}
+
+input NoteUpdateWithWhereUniqueWithoutConsumerInput {
+  where: NoteWhereUniqueInput!
+  data: NoteUpdateWithoutConsumerDataInput!
+}
+
+input NoteUpdateWithWhereUniqueWithoutCreatorInput {
+  where: NoteWhereUniqueInput!
+  data: NoteUpdateWithoutCreatorDataInput!
+}
+
+input NoteUpsertWithoutRequestsInput {
+  update: NoteUpdateWithoutRequestsDataInput!
+  create: NoteCreateWithoutRequestsInput!
+}
+
+input NoteUpsertWithWhereUniqueWithoutCollaboratorInput {
+  where: NoteWhereUniqueInput!
+  update: NoteUpdateWithoutCollaboratorDataInput!
+  create: NoteCreateWithoutCollaboratorInput!
+}
+
+input NoteUpsertWithWhereUniqueWithoutConsumerInput {
+  where: NoteWhereUniqueInput!
+  update: NoteUpdateWithoutConsumerDataInput!
+  create: NoteCreateWithoutConsumerInput!
+}
+
+input NoteUpsertWithWhereUniqueWithoutCreatorInput {
+  where: NoteWhereUniqueInput!
+  update: NoteUpdateWithoutCreatorDataInput!
+  create: NoteCreateWithoutCreatorInput!
+}
+
+input NoteWhereInput {
+  """Logical AND on all given filters."""
+  AND: [NoteWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [NoteWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [NoteWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  title: String
+
+  """All values that are not equal to given value."""
+  title_not: String
+
+  """All values that are contained in given list."""
+  title_in: [String!]
+
+  """All values that are not contained in given list."""
+  title_not_in: [String!]
+
+  """All values less than the given value."""
+  title_lt: String
+
+  """All values less than or equal the given value."""
+  title_lte: String
+
+  """All values greater than the given value."""
+  title_gt: String
+
+  """All values greater than or equal the given value."""
+  title_gte: String
+
+  """All values containing the given string."""
+  title_contains: String
+
+  """All values not containing the given string."""
+  title_not_contains: String
+
+  """All values starting with the given string."""
+  title_starts_with: String
+
+  """All values not starting with the given string."""
+  title_not_starts_with: String
+
+  """All values ending with the given string."""
+  title_ends_with: String
+
+  """All values not ending with the given string."""
+  title_not_ends_with: String
+  body: String
+
+  """All values that are not equal to given value."""
+  body_not: String
+
+  """All values that are contained in given list."""
+  body_in: [String!]
+
+  """All values that are not contained in given list."""
+  body_not_in: [String!]
+
+  """All values less than the given value."""
+  body_lt: String
+
+  """All values less than or equal the given value."""
+  body_lte: String
+
+  """All values greater than the given value."""
+  body_gt: String
+
+  """All values greater than or equal the given value."""
+  body_gte: String
+
+  """All values containing the given string."""
+  body_contains: String
+
+  """All values not containing the given string."""
+  body_not_contains: String
+
+  """All values starting with the given string."""
+  body_starts_with: String
+
+  """All values not starting with the given string."""
+  body_not_starts_with: String
+
+  """All values ending with the given string."""
+  body_ends_with: String
+
+  """All values not ending with the given string."""
+  body_not_ends_with: String
+  published: Boolean
+
+  """All values that are not equal to given value."""
+  published_not: Boolean
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  likes_every: UserWhereInput
+  likes_some: UserWhereInput
+  likes_none: UserWhereInput
+  creator: UserWhereInput
+  collaborator_every: UserWhereInput
+  collaborator_some: UserWhereInput
+  collaborator_none: UserWhereInput
+  consumer_every: UserWhereInput
+  consumer_some: UserWhereInput
+  consumer_none: UserWhereInput
+  requests_every: RequestWhereInput
+  requests_some: RequestWhereInput
+  requests_none: RequestWhereInput
+}
+
+input NoteWhereUniqueInput {
+  id: ID
+}
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+}
+
+enum PrismaDatabase {
+  default
+}
+
+type Query {
+  requests(where: RequestWhereInput, orderBy: RequestOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Request]!
+  notes(where: NoteWhereInput, orderBy: NoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Note]!
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  request(where: RequestWhereUniqueInput!): Request
+  note(where: NoteWhereUniqueInput!): Note
+  user(where: UserWhereUniqueInput!): User
+  requestsConnection(where: RequestWhereInput, orderBy: RequestOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RequestConnection!
+  notesConnection(where: NoteWhereInput, orderBy: NoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): NoteConnection!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+
+  """Fetches an object given its ID"""
+  node(
+    """The ID of an object"""
+    id: ID!
+  ): Node
+}
+
+enum reqType {
+  EDIT
+  VIEW
+}
+
+type Request implements Node {
+  id: ID!
+  user: User!
+  note: Note!
+  type: reqType!
+  accepted: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""A connection to a list of items."""
+type RequestConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [RequestEdge]!
+  aggregate: AggregateRequest!
+}
+
+input RequestCreateInput {
+  id: ID
+  type: reqType!
+  accepted: Boolean!
+  user: UserCreateOneWithoutRequestsInput!
+  note: NoteCreateOneWithoutRequestsInput!
+}
+
+input RequestCreateManyWithoutNoteInput {
+  create: [RequestCreateWithoutNoteInput!]
+  connect: [RequestWhereUniqueInput!]
+}
+
+input RequestCreateManyWithoutUserInput {
+  create: [RequestCreateWithoutUserInput!]
+  connect: [RequestWhereUniqueInput!]
+}
+
+input RequestCreateWithoutNoteInput {
+  id: ID
+  type: reqType!
+  accepted: Boolean!
+  user: UserCreateOneWithoutRequestsInput!
+}
+
+input RequestCreateWithoutUserInput {
+  id: ID
+  type: reqType!
+  accepted: Boolean!
+  note: NoteCreateOneWithoutRequestsInput!
+}
+
+"""An edge in a connection."""
+type RequestEdge {
+  """The item at the end of the edge."""
+  node: Request!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum RequestOrderByInput {
+  id_ASC
+  id_DESC
+  type_ASC
+  type_DESC
+  accepted_ASC
+  accepted_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type RequestPreviousValues {
+  id: ID!
+  type: reqType!
+  accepted: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input RequestScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [RequestScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [RequestScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [RequestScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  type: reqType
+
+  """All values that are not equal to given value."""
+  type_not: reqType
+
+  """All values that are contained in given list."""
+  type_in: [reqType!]
+
+  """All values that are not contained in given list."""
+  type_not_in: [reqType!]
+  accepted: Boolean
+
+  """All values that are not equal to given value."""
+  accepted_not: Boolean
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+}
+
+type RequestSubscriptionPayload {
+  mutation: MutationType!
+  node: Request
+  updatedFields: [String!]
+  previousValues: RequestPreviousValues
+}
+
+input RequestSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [RequestSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [RequestSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [RequestSubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: RequestWhereInput
+}
+
+input RequestUpdateInput {
+  type: reqType
+  accepted: Boolean
+  user: UserUpdateOneRequiredWithoutRequestsInput
+  note: NoteUpdateOneRequiredWithoutRequestsInput
+}
+
+input RequestUpdateManyDataInput {
+  type: reqType
+  accepted: Boolean
+}
+
+input RequestUpdateManyMutationInput {
+  type: reqType
+  accepted: Boolean
+}
+
+input RequestUpdateManyWithoutNoteInput {
+  create: [RequestCreateWithoutNoteInput!]
+  connect: [RequestWhereUniqueInput!]
+  set: [RequestWhereUniqueInput!]
+  disconnect: [RequestWhereUniqueInput!]
+  delete: [RequestWhereUniqueInput!]
+  update: [RequestUpdateWithWhereUniqueWithoutNoteInput!]
+  updateMany: [RequestUpdateManyWithWhereNestedInput!]
+  deleteMany: [RequestScalarWhereInput!]
+  upsert: [RequestUpsertWithWhereUniqueWithoutNoteInput!]
+}
+
+input RequestUpdateManyWithoutUserInput {
+  create: [RequestCreateWithoutUserInput!]
+  connect: [RequestWhereUniqueInput!]
+  set: [RequestWhereUniqueInput!]
+  disconnect: [RequestWhereUniqueInput!]
+  delete: [RequestWhereUniqueInput!]
+  update: [RequestUpdateWithWhereUniqueWithoutUserInput!]
+  updateMany: [RequestUpdateManyWithWhereNestedInput!]
+  deleteMany: [RequestScalarWhereInput!]
+  upsert: [RequestUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input RequestUpdateManyWithWhereNestedInput {
+  where: RequestScalarWhereInput!
+  data: RequestUpdateManyDataInput!
+}
+
+input RequestUpdateWithoutNoteDataInput {
+  type: reqType
+  accepted: Boolean
+  user: UserUpdateOneRequiredWithoutRequestsInput
+}
+
+input RequestUpdateWithoutUserDataInput {
+  type: reqType
+  accepted: Boolean
+  note: NoteUpdateOneRequiredWithoutRequestsInput
+}
+
+input RequestUpdateWithWhereUniqueWithoutNoteInput {
+  where: RequestWhereUniqueInput!
+  data: RequestUpdateWithoutNoteDataInput!
+}
+
+input RequestUpdateWithWhereUniqueWithoutUserInput {
+  where: RequestWhereUniqueInput!
+  data: RequestUpdateWithoutUserDataInput!
+}
+
+input RequestUpsertWithWhereUniqueWithoutNoteInput {
+  where: RequestWhereUniqueInput!
+  update: RequestUpdateWithoutNoteDataInput!
+  create: RequestCreateWithoutNoteInput!
+}
+
+input RequestUpsertWithWhereUniqueWithoutUserInput {
+  where: RequestWhereUniqueInput!
+  update: RequestUpdateWithoutUserDataInput!
+  create: RequestCreateWithoutUserInput!
+}
+
+input RequestWhereInput {
+  """Logical AND on all given filters."""
+  AND: [RequestWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [RequestWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [RequestWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  type: reqType
+
+  """All values that are not equal to given value."""
+  type_not: reqType
+
+  """All values that are contained in given list."""
+  type_in: [reqType!]
+
+  """All values that are not contained in given list."""
+  type_not_in: [reqType!]
+  accepted: Boolean
+
+  """All values that are not equal to given value."""
+  accepted_not: Boolean
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  user: UserWhereInput
+  note: NoteWhereInput
+}
+
+input RequestWhereUniqueInput {
+  id: ID
+}
+
+type Subscription {
+  request(where: RequestSubscriptionWhereInput): RequestSubscriptionPayload
+  note(where: NoteSubscriptionWhereInput): NoteSubscriptionPayload
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+}
+
+type User implements Node {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  username: String!
+  email: String!
+  password: String!
+  photo: String!
+  header: String!
+  active: Boolean!
+  notificationToken: String
+  createdPosts(where: NoteWhereInput, orderBy: NoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Note!]
+  collaboratedPosts(where: NoteWhereInput, orderBy: NoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Note!]
+  consumedPosts(where: NoteWhereInput, orderBy: NoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Note!]
+  requests(where: RequestWhereInput, orderBy: RequestOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Request!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""A connection to a list of items."""
+type UserConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [UserEdge]!
+  aggregate: AggregateUser!
+}
+
+input UserCreateInput {
+  id: ID
+  firstName: String!
+  lastName: String!
+  username: String!
+  email: String!
+  password: String!
+  photo: String!
+  header: String!
+  active: Boolean!
+  notificationToken: String
+  createdPosts: NoteCreateManyWithoutCreatorInput
+  collaboratedPosts: NoteCreateManyWithoutCollaboratorInput
+  consumedPosts: NoteCreateManyWithoutConsumerInput
+  requests: RequestCreateManyWithoutUserInput
+}
+
+input UserCreateManyInput {
+  create: [UserCreateInput!]
+  connect: [UserWhereUniqueInput!]
+}
+
+input UserCreateManyWithoutCollaboratedPostsInput {
+  create: [UserCreateWithoutCollaboratedPostsInput!]
+  connect: [UserWhereUniqueInput!]
+}
+
+input UserCreateManyWithoutConsumedPostsInput {
+  create: [UserCreateWithoutConsumedPostsInput!]
+  connect: [UserWhereUniqueInput!]
+}
+
+input UserCreateOneWithoutCreatedPostsInput {
+  create: UserCreateWithoutCreatedPostsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateOneWithoutRequestsInput {
+  create: UserCreateWithoutRequestsInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutCollaboratedPostsInput {
+  id: ID
+  firstName: String!
+  lastName: String!
+  username: String!
+  email: String!
+  password: String!
+  photo: String!
+  header: String!
+  active: Boolean!
+  notificationToken: String
+  createdPosts: NoteCreateManyWithoutCreatorInput
+  consumedPosts: NoteCreateManyWithoutConsumerInput
+  requests: RequestCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutConsumedPostsInput {
+  id: ID
+  firstName: String!
+  lastName: String!
+  username: String!
+  email: String!
+  password: String!
+  photo: String!
+  header: String!
+  active: Boolean!
+  notificationToken: String
+  createdPosts: NoteCreateManyWithoutCreatorInput
+  collaboratedPosts: NoteCreateManyWithoutCollaboratorInput
+  requests: RequestCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutCreatedPostsInput {
+  id: ID
+  firstName: String!
+  lastName: String!
+  username: String!
+  email: String!
+  password: String!
+  photo: String!
+  header: String!
+  active: Boolean!
+  notificationToken: String
+  collaboratedPosts: NoteCreateManyWithoutCollaboratorInput
+  consumedPosts: NoteCreateManyWithoutConsumerInput
+  requests: RequestCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutRequestsInput {
+  id: ID
+  firstName: String!
+  lastName: String!
+  username: String!
+  email: String!
+  password: String!
+  photo: String!
+  header: String!
+  active: Boolean!
+  notificationToken: String
+  createdPosts: NoteCreateManyWithoutCreatorInput
+  collaboratedPosts: NoteCreateManyWithoutCollaboratorInput
+  consumedPosts: NoteCreateManyWithoutConsumerInput
+}
+
+"""An edge in a connection."""
+type UserEdge {
+  """The item at the end of the edge."""
+  node: User!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum UserOrderByInput {
+  id_ASC
+  id_DESC
+  firstName_ASC
+  firstName_DESC
+  lastName_ASC
+  lastName_DESC
+  username_ASC
+  username_DESC
+  email_ASC
+  email_DESC
+  password_ASC
+  password_DESC
+  photo_ASC
+  photo_DESC
+  header_ASC
+  header_DESC
+  active_ASC
+  active_DESC
+  notificationToken_ASC
+  notificationToken_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type UserPreviousValues {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  username: String!
+  email: String!
+  password: String!
+  photo: String!
+  header: String!
+  active: Boolean!
+  notificationToken: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input UserScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [UserScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [UserScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [UserScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  firstName: String
+
+  """All values that are not equal to given value."""
+  firstName_not: String
+
+  """All values that are contained in given list."""
+  firstName_in: [String!]
+
+  """All values that are not contained in given list."""
+  firstName_not_in: [String!]
+
+  """All values less than the given value."""
+  firstName_lt: String
+
+  """All values less than or equal the given value."""
+  firstName_lte: String
+
+  """All values greater than the given value."""
+  firstName_gt: String
+
+  """All values greater than or equal the given value."""
+  firstName_gte: String
+
+  """All values containing the given string."""
+  firstName_contains: String
+
+  """All values not containing the given string."""
+  firstName_not_contains: String
+
+  """All values starting with the given string."""
+  firstName_starts_with: String
+
+  """All values not starting with the given string."""
+  firstName_not_starts_with: String
+
+  """All values ending with the given string."""
+  firstName_ends_with: String
+
+  """All values not ending with the given string."""
+  firstName_not_ends_with: String
+  lastName: String
+
+  """All values that are not equal to given value."""
+  lastName_not: String
+
+  """All values that are contained in given list."""
+  lastName_in: [String!]
+
+  """All values that are not contained in given list."""
+  lastName_not_in: [String!]
+
+  """All values less than the given value."""
+  lastName_lt: String
+
+  """All values less than or equal the given value."""
+  lastName_lte: String
+
+  """All values greater than the given value."""
+  lastName_gt: String
+
+  """All values greater than or equal the given value."""
+  lastName_gte: String
+
+  """All values containing the given string."""
+  lastName_contains: String
+
+  """All values not containing the given string."""
+  lastName_not_contains: String
+
+  """All values starting with the given string."""
+  lastName_starts_with: String
+
+  """All values not starting with the given string."""
+  lastName_not_starts_with: String
+
+  """All values ending with the given string."""
+  lastName_ends_with: String
+
+  """All values not ending with the given string."""
+  lastName_not_ends_with: String
+  username: String
+
+  """All values that are not equal to given value."""
+  username_not: String
+
+  """All values that are contained in given list."""
+  username_in: [String!]
+
+  """All values that are not contained in given list."""
+  username_not_in: [String!]
+
+  """All values less than the given value."""
+  username_lt: String
+
+  """All values less than or equal the given value."""
+  username_lte: String
+
+  """All values greater than the given value."""
+  username_gt: String
+
+  """All values greater than or equal the given value."""
+  username_gte: String
+
+  """All values containing the given string."""
+  username_contains: String
+
+  """All values not containing the given string."""
+  username_not_contains: String
+
+  """All values starting with the given string."""
+  username_starts_with: String
+
+  """All values not starting with the given string."""
+  username_not_starts_with: String
+
+  """All values ending with the given string."""
+  username_ends_with: String
+
+  """All values not ending with the given string."""
+  username_not_ends_with: String
+  email: String
+
+  """All values that are not equal to given value."""
+  email_not: String
+
+  """All values that are contained in given list."""
+  email_in: [String!]
+
+  """All values that are not contained in given list."""
+  email_not_in: [String!]
+
+  """All values less than the given value."""
+  email_lt: String
+
+  """All values less than or equal the given value."""
+  email_lte: String
+
+  """All values greater than the given value."""
+  email_gt: String
+
+  """All values greater than or equal the given value."""
+  email_gte: String
+
+  """All values containing the given string."""
+  email_contains: String
+
+  """All values not containing the given string."""
+  email_not_contains: String
+
+  """All values starting with the given string."""
+  email_starts_with: String
+
+  """All values not starting with the given string."""
+  email_not_starts_with: String
+
+  """All values ending with the given string."""
+  email_ends_with: String
+
+  """All values not ending with the given string."""
+  email_not_ends_with: String
+  password: String
+
+  """All values that are not equal to given value."""
+  password_not: String
+
+  """All values that are contained in given list."""
+  password_in: [String!]
+
+  """All values that are not contained in given list."""
+  password_not_in: [String!]
+
+  """All values less than the given value."""
+  password_lt: String
+
+  """All values less than or equal the given value."""
+  password_lte: String
+
+  """All values greater than the given value."""
+  password_gt: String
+
+  """All values greater than or equal the given value."""
+  password_gte: String
+
+  """All values containing the given string."""
+  password_contains: String
+
+  """All values not containing the given string."""
+  password_not_contains: String
+
+  """All values starting with the given string."""
+  password_starts_with: String
+
+  """All values not starting with the given string."""
+  password_not_starts_with: String
+
+  """All values ending with the given string."""
+  password_ends_with: String
+
+  """All values not ending with the given string."""
+  password_not_ends_with: String
+  photo: String
+
+  """All values that are not equal to given value."""
+  photo_not: String
+
+  """All values that are contained in given list."""
+  photo_in: [String!]
+
+  """All values that are not contained in given list."""
+  photo_not_in: [String!]
+
+  """All values less than the given value."""
+  photo_lt: String
+
+  """All values less than or equal the given value."""
+  photo_lte: String
+
+  """All values greater than the given value."""
+  photo_gt: String
+
+  """All values greater than or equal the given value."""
+  photo_gte: String
+
+  """All values containing the given string."""
+  photo_contains: String
+
+  """All values not containing the given string."""
+  photo_not_contains: String
+
+  """All values starting with the given string."""
+  photo_starts_with: String
+
+  """All values not starting with the given string."""
+  photo_not_starts_with: String
+
+  """All values ending with the given string."""
+  photo_ends_with: String
+
+  """All values not ending with the given string."""
+  photo_not_ends_with: String
+  header: String
+
+  """All values that are not equal to given value."""
+  header_not: String
+
+  """All values that are contained in given list."""
+  header_in: [String!]
+
+  """All values that are not contained in given list."""
+  header_not_in: [String!]
+
+  """All values less than the given value."""
+  header_lt: String
+
+  """All values less than or equal the given value."""
+  header_lte: String
+
+  """All values greater than the given value."""
+  header_gt: String
+
+  """All values greater than or equal the given value."""
+  header_gte: String
+
+  """All values containing the given string."""
+  header_contains: String
+
+  """All values not containing the given string."""
+  header_not_contains: String
+
+  """All values starting with the given string."""
+  header_starts_with: String
+
+  """All values not starting with the given string."""
+  header_not_starts_with: String
+
+  """All values ending with the given string."""
+  header_ends_with: String
+
+  """All values not ending with the given string."""
+  header_not_ends_with: String
+  active: Boolean
+
+  """All values that are not equal to given value."""
+  active_not: Boolean
+  notificationToken: String
+
+  """All values that are not equal to given value."""
+  notificationToken_not: String
+
+  """All values that are contained in given list."""
+  notificationToken_in: [String!]
+
+  """All values that are not contained in given list."""
+  notificationToken_not_in: [String!]
+
+  """All values less than the given value."""
+  notificationToken_lt: String
+
+  """All values less than or equal the given value."""
+  notificationToken_lte: String
+
+  """All values greater than the given value."""
+  notificationToken_gt: String
+
+  """All values greater than or equal the given value."""
+  notificationToken_gte: String
+
+  """All values containing the given string."""
+  notificationToken_contains: String
+
+  """All values not containing the given string."""
+  notificationToken_not_contains: String
+
+  """All values starting with the given string."""
+  notificationToken_starts_with: String
+
+  """All values not starting with the given string."""
+  notificationToken_not_starts_with: String
+
+  """All values ending with the given string."""
+  notificationToken_ends_with: String
+
+  """All values not ending with the given string."""
+  notificationToken_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+}
+
+type UserSubscriptionPayload {
+  mutation: MutationType!
+  node: User
+  updatedFields: [String!]
+  previousValues: UserPreviousValues
+}
+
+input UserSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [UserSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [UserSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [UserSubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: UserWhereInput
+}
+
+input UserUpdateDataInput {
+  firstName: String
+  lastName: String
+  username: String
+  email: String
+  password: String
+  photo: String
+  header: String
+  active: Boolean
+  notificationToken: String
+  createdPosts: NoteUpdateManyWithoutCreatorInput
+  collaboratedPosts: NoteUpdateManyWithoutCollaboratorInput
+  consumedPosts: NoteUpdateManyWithoutConsumerInput
+  requests: RequestUpdateManyWithoutUserInput
+}
+
+input UserUpdateInput {
+  firstName: String
+  lastName: String
+  username: String
+  email: String
+  password: String
+  photo: String
+  header: String
+  active: Boolean
+  notificationToken: String
+  createdPosts: NoteUpdateManyWithoutCreatorInput
+  collaboratedPosts: NoteUpdateManyWithoutCollaboratorInput
+  consumedPosts: NoteUpdateManyWithoutConsumerInput
+  requests: RequestUpdateManyWithoutUserInput
+}
+
+input UserUpdateManyDataInput {
+  firstName: String
+  lastName: String
+  username: String
+  email: String
+  password: String
+  photo: String
+  header: String
+  active: Boolean
+  notificationToken: String
+}
+
+input UserUpdateManyInput {
+  create: [UserCreateInput!]
+  connect: [UserWhereUniqueInput!]
+  set: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  delete: [UserWhereUniqueInput!]
+  update: [UserUpdateWithWhereUniqueNestedInput!]
+  updateMany: [UserUpdateManyWithWhereNestedInput!]
+  deleteMany: [UserScalarWhereInput!]
+  upsert: [UserUpsertWithWhereUniqueNestedInput!]
+}
+
+input UserUpdateManyMutationInput {
+  firstName: String
+  lastName: String
+  username: String
+  email: String
+  password: String
+  photo: String
+  header: String
+  active: Boolean
+  notificationToken: String
+}
+
+input UserUpdateManyWithoutCollaboratedPostsInput {
+  create: [UserCreateWithoutCollaboratedPostsInput!]
+  connect: [UserWhereUniqueInput!]
+  set: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  delete: [UserWhereUniqueInput!]
+  update: [UserUpdateWithWhereUniqueWithoutCollaboratedPostsInput!]
+  updateMany: [UserUpdateManyWithWhereNestedInput!]
+  deleteMany: [UserScalarWhereInput!]
+  upsert: [UserUpsertWithWhereUniqueWithoutCollaboratedPostsInput!]
+}
+
+input UserUpdateManyWithoutConsumedPostsInput {
+  create: [UserCreateWithoutConsumedPostsInput!]
+  connect: [UserWhereUniqueInput!]
+  set: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  delete: [UserWhereUniqueInput!]
+  update: [UserUpdateWithWhereUniqueWithoutConsumedPostsInput!]
+  updateMany: [UserUpdateManyWithWhereNestedInput!]
+  deleteMany: [UserScalarWhereInput!]
+  upsert: [UserUpsertWithWhereUniqueWithoutConsumedPostsInput!]
+}
+
+input UserUpdateManyWithWhereNestedInput {
+  where: UserScalarWhereInput!
+  data: UserUpdateManyDataInput!
+}
+
+input UserUpdateOneRequiredWithoutCreatedPostsInput {
+  create: UserCreateWithoutCreatedPostsInput
+  connect: UserWhereUniqueInput
+  update: UserUpdateWithoutCreatedPostsDataInput
+  upsert: UserUpsertWithoutCreatedPostsInput
+}
+
+input UserUpdateOneRequiredWithoutRequestsInput {
+  create: UserCreateWithoutRequestsInput
+  connect: UserWhereUniqueInput
+  update: UserUpdateWithoutRequestsDataInput
+  upsert: UserUpsertWithoutRequestsInput
+}
+
+input UserUpdateWithoutCollaboratedPostsDataInput {
+  firstName: String
+  lastName: String
+  username: String
+  email: String
+  password: String
+  photo: String
+  header: String
+  active: Boolean
+  notificationToken: String
+  createdPosts: NoteUpdateManyWithoutCreatorInput
+  consumedPosts: NoteUpdateManyWithoutConsumerInput
+  requests: RequestUpdateManyWithoutUserInput
+}
+
+input UserUpdateWithoutConsumedPostsDataInput {
+  firstName: String
+  lastName: String
+  username: String
+  email: String
+  password: String
+  photo: String
+  header: String
+  active: Boolean
+  notificationToken: String
+  createdPosts: NoteUpdateManyWithoutCreatorInput
+  collaboratedPosts: NoteUpdateManyWithoutCollaboratorInput
+  requests: RequestUpdateManyWithoutUserInput
+}
+
+input UserUpdateWithoutCreatedPostsDataInput {
+  firstName: String
+  lastName: String
+  username: String
+  email: String
+  password: String
+  photo: String
+  header: String
+  active: Boolean
+  notificationToken: String
+  collaboratedPosts: NoteUpdateManyWithoutCollaboratorInput
+  consumedPosts: NoteUpdateManyWithoutConsumerInput
+  requests: RequestUpdateManyWithoutUserInput
+}
+
+input UserUpdateWithoutRequestsDataInput {
+  firstName: String
+  lastName: String
+  username: String
+  email: String
+  password: String
+  photo: String
+  header: String
+  active: Boolean
+  notificationToken: String
+  createdPosts: NoteUpdateManyWithoutCreatorInput
+  collaboratedPosts: NoteUpdateManyWithoutCollaboratorInput
+  consumedPosts: NoteUpdateManyWithoutConsumerInput
+}
+
+input UserUpdateWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput!
+  data: UserUpdateDataInput!
+}
+
+input UserUpdateWithWhereUniqueWithoutCollaboratedPostsInput {
+  where: UserWhereUniqueInput!
+  data: UserUpdateWithoutCollaboratedPostsDataInput!
+}
+
+input UserUpdateWithWhereUniqueWithoutConsumedPostsInput {
+  where: UserWhereUniqueInput!
+  data: UserUpdateWithoutConsumedPostsDataInput!
+}
+
+input UserUpsertWithoutCreatedPostsInput {
+  update: UserUpdateWithoutCreatedPostsDataInput!
+  create: UserCreateWithoutCreatedPostsInput!
+}
+
+input UserUpsertWithoutRequestsInput {
+  update: UserUpdateWithoutRequestsDataInput!
+  create: UserCreateWithoutRequestsInput!
+}
+
+input UserUpsertWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput!
+  update: UserUpdateDataInput!
+  create: UserCreateInput!
+}
+
+input UserUpsertWithWhereUniqueWithoutCollaboratedPostsInput {
+  where: UserWhereUniqueInput!
+  update: UserUpdateWithoutCollaboratedPostsDataInput!
+  create: UserCreateWithoutCollaboratedPostsInput!
+}
+
+input UserUpsertWithWhereUniqueWithoutConsumedPostsInput {
+  where: UserWhereUniqueInput!
+  update: UserUpdateWithoutConsumedPostsDataInput!
+  create: UserCreateWithoutConsumedPostsInput!
+}
+
+input UserWhereInput {
+  """Logical AND on all given filters."""
+  AND: [UserWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [UserWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [UserWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  firstName: String
+
+  """All values that are not equal to given value."""
+  firstName_not: String
+
+  """All values that are contained in given list."""
+  firstName_in: [String!]
+
+  """All values that are not contained in given list."""
+  firstName_not_in: [String!]
+
+  """All values less than the given value."""
+  firstName_lt: String
+
+  """All values less than or equal the given value."""
+  firstName_lte: String
+
+  """All values greater than the given value."""
+  firstName_gt: String
+
+  """All values greater than or equal the given value."""
+  firstName_gte: String
+
+  """All values containing the given string."""
+  firstName_contains: String
+
+  """All values not containing the given string."""
+  firstName_not_contains: String
+
+  """All values starting with the given string."""
+  firstName_starts_with: String
+
+  """All values not starting with the given string."""
+  firstName_not_starts_with: String
+
+  """All values ending with the given string."""
+  firstName_ends_with: String
+
+  """All values not ending with the given string."""
+  firstName_not_ends_with: String
+  lastName: String
+
+  """All values that are not equal to given value."""
+  lastName_not: String
+
+  """All values that are contained in given list."""
+  lastName_in: [String!]
+
+  """All values that are not contained in given list."""
+  lastName_not_in: [String!]
+
+  """All values less than the given value."""
+  lastName_lt: String
+
+  """All values less than or equal the given value."""
+  lastName_lte: String
+
+  """All values greater than the given value."""
+  lastName_gt: String
+
+  """All values greater than or equal the given value."""
+  lastName_gte: String
+
+  """All values containing the given string."""
+  lastName_contains: String
+
+  """All values not containing the given string."""
+  lastName_not_contains: String
+
+  """All values starting with the given string."""
+  lastName_starts_with: String
+
+  """All values not starting with the given string."""
+  lastName_not_starts_with: String
+
+  """All values ending with the given string."""
+  lastName_ends_with: String
+
+  """All values not ending with the given string."""
+  lastName_not_ends_with: String
+  username: String
+
+  """All values that are not equal to given value."""
+  username_not: String
+
+  """All values that are contained in given list."""
+  username_in: [String!]
+
+  """All values that are not contained in given list."""
+  username_not_in: [String!]
+
+  """All values less than the given value."""
+  username_lt: String
+
+  """All values less than or equal the given value."""
+  username_lte: String
+
+  """All values greater than the given value."""
+  username_gt: String
+
+  """All values greater than or equal the given value."""
+  username_gte: String
+
+  """All values containing the given string."""
+  username_contains: String
+
+  """All values not containing the given string."""
+  username_not_contains: String
+
+  """All values starting with the given string."""
+  username_starts_with: String
+
+  """All values not starting with the given string."""
+  username_not_starts_with: String
+
+  """All values ending with the given string."""
+  username_ends_with: String
+
+  """All values not ending with the given string."""
+  username_not_ends_with: String
+  email: String
+
+  """All values that are not equal to given value."""
+  email_not: String
+
+  """All values that are contained in given list."""
+  email_in: [String!]
+
+  """All values that are not contained in given list."""
+  email_not_in: [String!]
+
+  """All values less than the given value."""
+  email_lt: String
+
+  """All values less than or equal the given value."""
+  email_lte: String
+
+  """All values greater than the given value."""
+  email_gt: String
+
+  """All values greater than or equal the given value."""
+  email_gte: String
+
+  """All values containing the given string."""
+  email_contains: String
+
+  """All values not containing the given string."""
+  email_not_contains: String
+
+  """All values starting with the given string."""
+  email_starts_with: String
+
+  """All values not starting with the given string."""
+  email_not_starts_with: String
+
+  """All values ending with the given string."""
+  email_ends_with: String
+
+  """All values not ending with the given string."""
+  email_not_ends_with: String
+  password: String
+
+  """All values that are not equal to given value."""
+  password_not: String
+
+  """All values that are contained in given list."""
+  password_in: [String!]
+
+  """All values that are not contained in given list."""
+  password_not_in: [String!]
+
+  """All values less than the given value."""
+  password_lt: String
+
+  """All values less than or equal the given value."""
+  password_lte: String
+
+  """All values greater than the given value."""
+  password_gt: String
+
+  """All values greater than or equal the given value."""
+  password_gte: String
+
+  """All values containing the given string."""
+  password_contains: String
+
+  """All values not containing the given string."""
+  password_not_contains: String
+
+  """All values starting with the given string."""
+  password_starts_with: String
+
+  """All values not starting with the given string."""
+  password_not_starts_with: String
+
+  """All values ending with the given string."""
+  password_ends_with: String
+
+  """All values not ending with the given string."""
+  password_not_ends_with: String
+  photo: String
+
+  """All values that are not equal to given value."""
+  photo_not: String
+
+  """All values that are contained in given list."""
+  photo_in: [String!]
+
+  """All values that are not contained in given list."""
+  photo_not_in: [String!]
+
+  """All values less than the given value."""
+  photo_lt: String
+
+  """All values less than or equal the given value."""
+  photo_lte: String
+
+  """All values greater than the given value."""
+  photo_gt: String
+
+  """All values greater than or equal the given value."""
+  photo_gte: String
+
+  """All values containing the given string."""
+  photo_contains: String
+
+  """All values not containing the given string."""
+  photo_not_contains: String
+
+  """All values starting with the given string."""
+  photo_starts_with: String
+
+  """All values not starting with the given string."""
+  photo_not_starts_with: String
+
+  """All values ending with the given string."""
+  photo_ends_with: String
+
+  """All values not ending with the given string."""
+  photo_not_ends_with: String
+  header: String
+
+  """All values that are not equal to given value."""
+  header_not: String
+
+  """All values that are contained in given list."""
+  header_in: [String!]
+
+  """All values that are not contained in given list."""
+  header_not_in: [String!]
+
+  """All values less than the given value."""
+  header_lt: String
+
+  """All values less than or equal the given value."""
+  header_lte: String
+
+  """All values greater than the given value."""
+  header_gt: String
+
+  """All values greater than or equal the given value."""
+  header_gte: String
+
+  """All values containing the given string."""
+  header_contains: String
+
+  """All values not containing the given string."""
+  header_not_contains: String
+
+  """All values starting with the given string."""
+  header_starts_with: String
+
+  """All values not starting with the given string."""
+  header_not_starts_with: String
+
+  """All values ending with the given string."""
+  header_ends_with: String
+
+  """All values not ending with the given string."""
+  header_not_ends_with: String
+  active: Boolean
+
+  """All values that are not equal to given value."""
+  active_not: Boolean
+  notificationToken: String
+
+  """All values that are not equal to given value."""
+  notificationToken_not: String
+
+  """All values that are contained in given list."""
+  notificationToken_in: [String!]
+
+  """All values that are not contained in given list."""
+  notificationToken_not_in: [String!]
+
+  """All values less than the given value."""
+  notificationToken_lt: String
+
+  """All values less than or equal the given value."""
+  notificationToken_lte: String
+
+  """All values greater than the given value."""
+  notificationToken_gt: String
+
+  """All values greater than or equal the given value."""
+  notificationToken_gte: String
+
+  """All values containing the given string."""
+  notificationToken_contains: String
+
+  """All values not containing the given string."""
+  notificationToken_not_contains: String
+
+  """All values starting with the given string."""
+  notificationToken_starts_with: String
+
+  """All values not starting with the given string."""
+  notificationToken_not_starts_with: String
+
+  """All values ending with the given string."""
+  notificationToken_ends_with: String
+
+  """All values not ending with the given string."""
+  notificationToken_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  createdPosts_every: NoteWhereInput
+  createdPosts_some: NoteWhereInput
+  createdPosts_none: NoteWhereInput
+  collaboratedPosts_every: NoteWhereInput
+  collaboratedPosts_some: NoteWhereInput
+  collaboratedPosts_none: NoteWhereInput
+  consumedPosts_every: NoteWhereInput
+  consumedPosts_some: NoteWhereInput
+  consumedPosts_none: NoteWhereInput
+  requests_every: RequestWhereInput
+  requests_some: RequestWhereInput
+  requests_none: RequestWhereInput
+}
+
+input UserWhereUniqueInput {
+  id: ID
+  email: String
+}

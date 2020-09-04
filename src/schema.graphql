@@ -1,0 +1,200 @@
+# import UserOrderByInput, NoteOrderByInput, RequestOrderByInput from './generated/prisma.graphql'
+
+type Query {
+  users(
+    query: String
+    first: Int
+    skip: Int
+    after: String
+    orderBy: UserOrderByInput
+  ): [User!]!
+  notes(
+    query: String
+    first: Int
+    skip: Int
+    after: String
+    orderBy: NoteOrderByInput
+  ): [Note!]!
+  requests(
+    query: String
+    first: Int
+    skip: Int
+    after: String
+    orderBy: RequestOrderByInput
+  ): [Request!]!
+  me: User!
+  user(id: String): User!
+  getNotificationToken: String
+  note(id: String): Note!
+  myNotes(
+    query: String
+    first: Int
+    skip: Int
+    after: String
+    orderBy: NoteOrderByInput
+  ): [Note!]!
+  myCollaborations(
+    query: String
+    first: Int
+    skip: Int
+    after: String
+    orderBy: NoteOrderByInput
+  ): [Note!]!
+  myReceivedRequests(
+    query: String
+    first: Int
+    skip: Int
+    after: String
+    orderBy: RequestOrderByInput
+  ): [Request!]!
+  mySentRequests(
+    query: String
+    first: Int
+    skip: Int
+    after: String
+    orderBy: RequestOrderByInput
+  ): [Request!]!
+}
+
+type AuthPayload {
+  user: User!
+  token: String
+  expiresOn: String
+}
+
+input createUserInput {
+  firstName: String!
+  lastName: String!
+  username: String!
+  email: String!
+  password: String!
+  passwordConfirm: String!
+}
+
+input updateUserInput {
+  firstName: String
+  lastName: String
+  username: String
+  email: String
+  photo: String
+  header: String
+}
+
+input changePasswordInput {
+  email: String!
+  password: String!
+  passwordConfirm: String!
+}
+
+input resetPasswordInput {
+  token: String!
+  password: String!
+  passwordConfirm: String!
+}
+
+input createNoteInput {
+  title: String
+  body: String
+  published: Boolean!
+}
+
+input updateNoteInput {
+  title: String
+  body: String
+}
+
+enum reqType {
+  EDIT
+  VIEW
+}
+
+input respondInputs {
+  response: Boolean
+  id: String!
+}
+
+input requestInputs {
+  noteId: String!
+  type: reqType!
+}
+
+type Mutation {
+  createUser(data: createUserInput!): AuthPayload!
+  loginUser(email: String!, password: String!): AuthPayload!
+  logoutUser: AuthPayload!
+  updateUser(data: updateUserInput!, password: String!): User!
+  setNotificationToken(notificationToken: String!): User!
+  deleteUser: User!
+  activateUser(email: String!, password: String!): User!
+  createNote(data: createNoteInput!): Note!
+  updateNote(id: ID!, data: updateNoteInput!): Note!
+  toggleLikes(id: ID!): Note!
+  deleteNote(id: ID!): Note!
+  sendRequest(data: requestInputs!): Request!
+  respondRequest(data: respondInputs!): Request!
+}
+
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  username: String!
+  email: String!
+  photo: String!
+  header: String!
+  active: Boolean!
+  notificationToken: String
+  createdPosts: [Note!]!
+  consumedPosts: [Note!]!
+  collaboratedPosts: [Note!]!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Note {
+  id: ID!
+  title: String
+  body: String!
+  published: Boolean!
+  likes: [User!]!
+  creator: User!
+  collaborator: [User!]!
+  consumer: [User!]!
+  createdAt: String!
+  updatedAt: String!
+  requests: [Request!]!
+}
+
+enum MutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+type NoteSubscriptionPayload {
+  mutation: MutationType!
+  node: Note
+}
+
+type RequestSubscriptionPayload {
+  mutation: MutationType!
+  node: Request
+}
+
+type Subscription {
+  note(id: ID!): NoteSubscriptionPayload!
+  notes: NoteSubscriptionPayload!
+  myNotes: NoteSubscriptionPayload!
+  sentRequests: RequestSubscriptionPayload!
+  receivedRequests: RequestSubscriptionPayload!
+}
+
+type Request {
+  id: ID!
+  user: User!
+  note: Note!
+  type: reqType!
+  accepted: Boolean!
+  createdAt: String!
+  updatedAt: String!
+}

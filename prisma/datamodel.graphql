@@ -1,0 +1,50 @@
+type User {
+  id: ID! @id
+  firstName: String!
+  lastName: String!
+  username: String!
+  email: String! @unique
+  password: String!
+  photo: String!
+  header: String!
+  active: Boolean!
+  notificationToken: String
+  createdPosts: [Note!]! @relation(name: "NoteToCreator", onDelete: CASCADE)
+  collaboratedPosts: [Note!]!
+  @relation(name: "NoteToCollaborator", onDelete: SET_NULL)
+  consumedPosts: [Note!]! @relation(name: "NoteToConsumer", onDelete: SET_NULL)
+  requests: [Request!]! @relation(name: "UserToRequest", onDelete: CASCADE)
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
+
+enum reqType {
+  EDIT
+  VIEW
+}
+
+type Request {
+  id: ID! @id
+  user: User! @relation(name: "UserToRequest", onDelete: SET_NULL)
+  note: Note! @relation(name: "NoteToRequest", onDelete: SET_NULL)
+  type: reqType!
+  accepted: Boolean!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
+
+type Note {
+  id: ID! @id
+  title: String
+  body: String!
+  published: Boolean!
+  wasPublished: Boolean!
+  likes: [User!]! @relation(name: "LikesToUsers", onDelete: SET_NULL)
+  creator: User! @relation(name: "NoteToCreator", onDelete: SET_NULL)
+  collaborator: [User!]!
+  @relation(name: "NoteToCollaborator", onDelete: SET_NULL)
+  consumer: [User!]! @relation(name: "NoteToConsumer", onDelete: SET_NULL)
+  requests: [Request!]! @relation(name: "NoteToRequest", onDelete: CASCADE)
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+}
