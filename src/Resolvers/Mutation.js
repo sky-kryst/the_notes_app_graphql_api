@@ -48,7 +48,7 @@ const Mutation = {
   },
   deleteUser(parents, args, { prisma, request }, info) {
     const id = authorizeUser(request)
-    /* return prisma.mutation.updateUser(
+    return prisma.mutation.updateUser(
       {
         where: { id },
         data: {
@@ -62,8 +62,7 @@ const Mutation = {
         },
       },
       info
-    ) */
-    return prisma.mutation.deleteUser({ where: { id } }, info)
+    )
   },
   async activateUser(parents, { email, password }, { prisma, request }, info) {
     const id = authorizeUser(request)
