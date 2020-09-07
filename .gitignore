@@ -4,4 +4,5 @@ config/
 .eslintrc
 .prettierrc
 .vscode/
-.graphqlconfig
+prisma/.env
+prisma/docker-compose.yml
