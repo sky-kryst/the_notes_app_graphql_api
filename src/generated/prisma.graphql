@@ -1,5 +1,5 @@
-# source: http://192.168.99.100:4466
-# timestamp: Wed Aug 19 2020 13:31:21 GMT+0530 (India Standard Time)
+# source: https://the-notes-app-a6bffce1fd.herokuapp.com/aakash-meshram-notes-app/prod
+# timestamp: Mon Sep 07 2020 12:02:59 GMT+0530 (India Standard Time)
 
 type AggregateNote {
   count: Int!
@@ -19,9 +19,6 @@ type BatchPayload {
 }
 
 scalar DateTime
-
-"""Raw JSON value"""
-scalar Json
 
 """
 The `Long` scalar type represents non-fractional signed whole numeric values.
@@ -48,7 +45,6 @@ type Mutation {
   deleteManyRequests(where: RequestWhereInput): BatchPayload!
   deleteManyNotes(where: NoteWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
-  executeRaw(database: PrismaDatabase, query: String!): Json!
 }
 
 enum MutationType {
@@ -68,6 +64,7 @@ type Note implements Node {
   title: String
   body: String!
   published: Boolean!
+  wasPublished: Boolean!
   likes(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
   creator: User!
   collaborator(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
@@ -92,6 +89,7 @@ input NoteCreateInput {
   title: String
   body: String!
   published: Boolean!
+  wasPublished: Boolean!
   likes: UserCreateManyInput
   creator: UserCreateOneWithoutCreatedPostsInput!
   collaborator: UserCreateManyWithoutCollaboratedPostsInput
@@ -124,6 +122,7 @@ input NoteCreateWithoutCollaboratorInput {
   title: String
   body: String!
   published: Boolean!
+  wasPublished: Boolean!
   likes: UserCreateManyInput
   creator: UserCreateOneWithoutCreatedPostsInput!
   consumer: UserCreateManyWithoutConsumedPostsInput
@@ -135,6 +134,7 @@ input NoteCreateWithoutConsumerInput {
   title: String
   body: String!
   published: Boolean!
+  wasPublished: Boolean!
   likes: UserCreateManyInput
   creator: UserCreateOneWithoutCreatedPostsInput!
   collaborator: UserCreateManyWithoutCollaboratedPostsInput
@@ -146,6 +146,7 @@ input NoteCreateWithoutCreatorInput {
   title: String
   body: String!
   published: Boolean!
+  wasPublished: Boolean!
   likes: UserCreateManyInput
   collaborator: UserCreateManyWithoutCollaboratedPostsInput
   consumer: UserCreateManyWithoutConsumedPostsInput
@@ -157,6 +158,7 @@ input NoteCreateWithoutRequestsInput {
   title: String
   body: String!
   published: Boolean!
+  wasPublished: Boolean!
   likes: UserCreateManyInput
   creator: UserCreateOneWithoutCreatedPostsInput!
   collaborator: UserCreateManyWithoutCollaboratedPostsInput
@@ -181,6 +183,8 @@ enum NoteOrderByInput {
   body_DESC
   published_ASC
   published_DESC
+  wasPublished_ASC
+  wasPublished_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -192,6 +196,7 @@ type NotePreviousValues {
   title: String
   body: String!
   published: Boolean!
+  wasPublished: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -329,6 +334,10 @@ input NoteScalarWhereInput {
 
   """All values that are not equal to given value."""
   published_not: Boolean
+  wasPublished: Boolean
+
+  """All values that are not equal to given value."""
+  wasPublished_not: Boolean
   createdAt: DateTime
 
   """All values that are not equal to given value."""
@@ -416,6 +425,7 @@ input NoteUpdateInput {
   title: String
   body: String
   published: Boolean
+  wasPublished: Boolean
   likes: UserUpdateManyInput
   creator: UserUpdateOneRequiredWithoutCreatedPostsInput
   collaborator: UserUpdateManyWithoutCollaboratedPostsInput
@@ -427,12 +437,14 @@ input NoteUpdateManyDataInput {
   title: String
   body: String
   published: Boolean
+  wasPublished: Boolean
 }
 
 input NoteUpdateManyMutationInput {
   title: String
   body: String
   published: Boolean
+  wasPublished: Boolean
 }
 
 input NoteUpdateManyWithoutCollaboratorInput {
@@ -487,6 +499,7 @@ input NoteUpdateWithoutCollaboratorDataInput {
   title: String
   body: String
   published: Boolean
+  wasPublished: Boolean
   likes: UserUpdateManyInput
   creator: UserUpdateOneRequiredWithoutCreatedPostsInput
   consumer: UserUpdateManyWithoutConsumedPostsInput
@@ -497,6 +510,7 @@ input NoteUpdateWithoutConsumerDataInput {
   title: String
   body: String
   published: Boolean
+  wasPublished: Boolean
   likes: UserUpdateManyInput
   creator: UserUpdateOneRequiredWithoutCreatedPostsInput
   collaborator: UserUpdateManyWithoutCollaboratedPostsInput
@@ -507,6 +521,7 @@ input NoteUpdateWithoutCreatorDataInput {
   title: String
   body: String
   published: Boolean
+  wasPublished: Boolean
   likes: UserUpdateManyInput
   collaborator: UserUpdateManyWithoutCollaboratedPostsInput
   consumer: UserUpdateManyWithoutConsumedPostsInput
@@ -517,6 +532,7 @@ input NoteUpdateWithoutRequestsDataInput {
   title: String
   body: String
   published: Boolean
+  wasPublished: Boolean
   likes: UserUpdateManyInput
   creator: UserUpdateOneRequiredWithoutCreatedPostsInput
   collaborator: UserUpdateManyWithoutCollaboratedPostsInput
@@ -694,6 +710,10 @@ input NoteWhereInput {
 
   """All values that are not equal to given value."""
   published_not: Boolean
+  wasPublished: Boolean
+
+  """All values that are not equal to given value."""
+  wasPublished_not: Boolean
   createdAt: DateTime
 
   """All values that are not equal to given value."""
@@ -770,10 +790,6 @@ type PageInfo {
 
   """When paginating forwards, the cursor to continue."""
   endCursor: String
-}
-
-enum PrismaDatabase {
-  default
 }
 
 type Query {
