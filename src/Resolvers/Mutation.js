@@ -21,6 +21,7 @@ const Mutation = {
   },
   async loginUser(parents, { email, password }, { prisma }, info) {
     const user = await prisma.query.user({ where: { email } })
+    if (!user) throw Error('The email is incorrect')
     const passwordCorrect = await bcrypt.compare(password, user.password)
     if (!user || !passwordCorrect)
       throw Error('The email and the password do not match')
